@@ -1,0 +1,67 @@
+package edu.fa.model;
+
+import java.util.Date;
+
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.Transient;
+
+@Entity
+public class Course {
+
+	@Id
+	@GeneratedValue(strategy = GenerationType.AUTO)
+	private int id;
+
+	@Column(name = "Course_name", unique = false)
+	private String name;
+
+//	Không muốn đưa thuộc tính này vào column trong database
+	@Transient
+	private Date createdDate;
+
+	public int getId() {
+		return id;
+	}
+
+	public void setId(int id) {
+		this.id = id;
+	}
+
+	public String getName() {
+		return name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
+	}
+
+	/*
+	 * public Date getCreatedDate() { return createdDate; }
+	 * 
+	 * public void setCreatedDate(Date createdDate) { this.createdDate =
+	 * createdDate; }
+	 */
+
+	public Course() {
+		super();
+	}
+
+	public Course(int id, String name) {
+		super();
+		this.id = id;
+		this.name = name;
+	}
+
+	public Course(String name) {
+		this.name = name;
+	}
+
+	@Override
+	public String toString() {
+		return name;
+	}
+}

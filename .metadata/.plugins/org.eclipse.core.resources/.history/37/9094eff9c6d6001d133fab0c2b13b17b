@@ -1,0 +1,7 @@
+package edu.fa;
+
+import org.hibernate.SessionFactory;
+
+public class ConnectionUtil {
+	private static SessionFactory sessionFactory = null;
+}

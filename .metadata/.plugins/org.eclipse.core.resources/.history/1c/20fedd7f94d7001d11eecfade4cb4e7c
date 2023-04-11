@@ -1,0 +1,71 @@
+package edu.fa.model;
+
+import java.util.HashSet;
+import java.util.Set;
+
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.ManyToMany;
+import javax.persistence.Table;
+
+@Entity
+@Table(name = "Groups")
+public class Group {
+
+	@Id
+	@GeneratedValue(strategy = GenerationType.AUTO)
+	@Column(name = "id")
+	private int id1;
+	private String name;
+
+	@ManyToMany
+	private Set<Fresher> freshers = new HashSet<>();
+
+	public Group() {
+		super();
+	}
+
+	public Group(String name, Set<Fresher> freshers) {
+		super();
+		this.name = name;
+		this.freshers = freshers;
+	}
+
+	public Set<Fresher> getFreshers() {
+		return freshers;
+	}
+
+	public void setFreshers(Set<Fresher> freshers) {
+		this.freshers = freshers;
+	}
+
+	public int getId() {
+		return id1;
+	}
+
+	public void setId(int id) {
+		this.id1 = id;
+	}
+
+	public String getName() {
+		return name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
+	}
+
+	public Group(String name) {
+		super();
+		this.name = name;
+	}
+
+	@Override
+	public String toString() {
+		return id1 + " " + name;
+	}
+
+}

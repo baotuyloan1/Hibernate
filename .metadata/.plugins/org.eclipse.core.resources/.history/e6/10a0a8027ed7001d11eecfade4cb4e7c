@@ -1,0 +1,154 @@
+package edu.fa;
+
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+
+import org.hibernate.Session;
+import org.hibernate.SessionFactory;
+
+import edu.fa.model.Address;
+import edu.fa.model.Course;
+import edu.fa.model.Fresher;
+import edu.fa.model.Group;
+import edu.fa.model.Syllabus;
+
+public class Management {
+
+	public static void main(String[] args) {
+//		createCourseSyllabuses();
+//		getCourseSyllabuses(1);
+//		createFresherAndCourse();
+//		createFresherAndAddress();
+		createFresherAndGroup();
+		ConnectionUtil.getSessionFactory().close();
+
+	}
+
+	private static void createFresherAndGroup() {
+		Fresher fresher1 = new Fresher();
+		Fresher fresher2 = new Fresher();
+		Group group1 = new Group();
+		Group group2 = new Group();
+		Set<Fresher> freshers = new HashSet<>();
+		freshers.add(fresher1);
+		freshers.add(fresher2);
+		Set<Group> groups = new HashSet<>();
+		groups.add(group1);
+		groups.add(group2);
+		fresher1.setName("Fresher 1");
+		fresher2.setName("Fresher 2");
+		fresher1.setGroups(groups);
+		fresher2.setGroups(groups);
+		
+		SessionFactory sessionFactory = ConnectionUtil.getSessionFactory();
+		
+		try {
+			Session session = sessionFactory.openSession();
+			session.beginTransaction();
+			session.save(fresher1);
+			session.save(fresher2);
+			session.save(group1);
+			session.save(group2);
+			session.getTransaction().commit();
+		} catch (Exception e) {
+			System.out.println(e.toString());
+		}
+	}
+
+	private static void createFresherAndCourse() {
+		List<Course> courses = new ArrayList<>();
+		courses.add(new Course("Java"));
+		courses.add(new Course("Hibernate"));
+		Fresher fresher = new Fresher("BaoKey", courses);
+		SessionFactory sessionFactory = ConnectionUtil.getSessionFactory();
+
+		try {
+			Session session = sessionFactory.openSession();
+//			start session
+			session.beginTransaction();
+
+			session.save(fresher);
+//			end session
+			for (Course course : courses) {
+				session.save(course);
+			}
+			session.getTransaction().commit();
+
+		} catch (Exception e) {
+			System.out.println(e.toString());
+		}
+	}
+
+	private static void createFresherAndAddress() {
+		Address address = new Address("Duy Tan", "Cau Giay");
+		Fresher fresher = new Fresher("BaoKey", address);
+		address.setFresher(fresher);
+		SessionFactory sessionFactory = ConnectionUtil.getSessionFactory();
+
+		try {
+			Session session = sessionFactory.openSession();
+
+//			start session
+			session.beginTransaction();
+			session.save(address);
+			session.save(fresher);
+
+//			end session
+			session.getTransaction().commit();
+
+		} catch (Exception e) {
+			System.out.println(e.toString());
+		}
+	}
+
+	private static void getCourseSyllabuses(int id) {
+		SessionFactory sessionFactory = ConnectionUtil.getSessionFactory();
+		try {
+			Session session = sessionFactory.openSession();
+
+//			start session
+			session.beginTransaction();
+
+			Course course = (Course) session.get(Course.class, id);
+			System.out.println(course.getName());
+			session.getTransaction().commit();
+			session.close();
+			System.out.println(course.getSyllabuses());
+		} catch (Exception e) {
+			System.out.println(e.toString());
+		}
+	}
+
+	private static void createCourseSyllabuses() {
+		List<Syllabus> syllabuses = new ArrayList<>();
+
+		Syllabus syllabus = new Syllabus("Hibernate Content", 30);
+
+		Syllabus offlineSyllabus = new Syllabus("Hibernate Content offline", 40);
+
+		syllabuses.add(syllabus);
+		syllabuses.add(offlineSyllabus);
+		Course course = new Course("Hibernate", new Date(), syllabus, syllabuses);
+
+		SessionFactory sessionFactory = ConnectionUtil.getSessionFactory();
+
+		try {
+			Session session = sessionFactory.openSession();
+
+//			save 
+//			start session
+			session.beginTransaction();
+			session.save(course);
+
+//			end session
+			session.getTransaction().commit();
+
+		} catch (Exception e) {
+			System.out.println(e.toString());
+		}
+	}
+
+}
